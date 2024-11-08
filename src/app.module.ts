@@ -9,6 +9,7 @@ import { DataSourceOptions } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import appConfig from './config/app.config';
 import postgresConfig from './database/config/postgres.config';
+import swaggerConfig from './config/swagger.config';
 
 const logger = new Logger('DatabaseConnection');
 logger.log(process.env.NODE_ENV);
@@ -27,7 +28,7 @@ const PostgresModule = TypeOrmModule.forRootAsync({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, postgresConfig],
+      load: [appConfig, postgresConfig, swaggerConfig],
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     PostgresModule,

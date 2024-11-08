@@ -6,7 +6,7 @@ import { AppConfig } from './app-config';
 enum Environment {
   Development = 'development',
   Production = 'production',
-  Test = 'test',
+  Local = 'local',
 }
 
 class EnvironmentVariablesValidator {
