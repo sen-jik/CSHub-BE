@@ -5,6 +5,8 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { SwaggerCustomOptions } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import * as expressBasicAuth from 'express-basic-auth';
+import * as cookieParser from 'cookie-parser';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -38,7 +40,9 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('docs', app, document, customOptions);
   }
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(`STAGE: ${process.env.NODE_ENV}`);
+  app.use(cookieParser(configService.get('auth.cookie.secret')));
+  await app.listen(configService.get('app.port'));
+  console.log(`STAGE: ${configService.get('app.nodeEnv')}`);
+  console.log(`PORT: ${configService.get('app.port')}`);
 }
 bootstrap();
