@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { AllConfigType } from 'src/config/config.type';
+import { AllConfigType } from 'src/config';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -18,7 +18,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       port: this.configService.get<number>('postgres.port', {
         infer: true,
       }),
-      database: this.configService.get<string>('postgres.name', {
+      database: this.configService.get<string>('postgres.database', {
         infer: true,
       }),
       username: this.configService.get<string>('postgres.username', {
