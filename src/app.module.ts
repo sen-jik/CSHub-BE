@@ -14,6 +14,7 @@ import postgresConfig from './database/config/postgres.config';
 import { PointHistoryModule } from './modules/point-history/point-history.module';
 import { RankingModule } from './modules/ranking/ranking.module';
 import authConfig from './config/modules/auth.config';
+import swaggerConfig from './config/modules/swagger.config';
 
 const logger = new Logger('DatabaseConnection');
 logger.log(`NODE_ENV: ${process.env.NODE_ENV}`);
@@ -33,7 +34,7 @@ const PostgresModule = TypeOrmModule.forRootAsync({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, postgresConfig, authConfig],
+      load: [appConfig, postgresConfig, authConfig, swaggerConfig],
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     PostgresModule,
