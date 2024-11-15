@@ -4,6 +4,7 @@ import { User } from '../infrastructure/db/entity/user.entity';
 import { Repository } from 'typeorm';
 import { Provider } from '../domain/provider.enum';
 import { KakaoUser } from '../../auth/domain/kakao-user.type';
+import { Role } from '../domain/role.enum';
 @Injectable()
 export class UserService {
   constructor(
@@ -11,7 +12,7 @@ export class UserService {
   ) {}
 
   async findAll() {
-    return 'findAll';
+    return await this.userRepository.find();
   }
 
   async findOne(id: string) {
@@ -34,5 +35,10 @@ export class UserService {
     user.platformId = kakaoUser.kakaoId;
     user.provider = Provider.KAKAO;
     return await this.userRepository.save(user);
+  }
+
+  async checkUserIsAdmin(id: string) {
+    const user = await this.userRepository.findOneBy({ id });
+    return user.role === Role.ADMIN;
   }
 }

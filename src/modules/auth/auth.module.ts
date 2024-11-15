@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AuthController } from './presentation/auth.controller';
 import { AuthService } from './application/auth.service';
 import { HttpModule } from '@nestjs/axios';
@@ -7,6 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { KakaoAuthClient } from './infrastructure/external/kakao/kakao-auth.client';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Module({
   imports: [
@@ -29,7 +31,16 @@ import { KakaoAuthClient } from './infrastructure/external/kakao/kakao-auth.clie
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, KakaoAuthClient],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    KakaoAuthClient,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    Logger,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -10,6 +10,7 @@ import { Response } from 'express';
 import { AuthService } from '../application/auth.service';
 import { ConfigService } from '@nestjs/config';
 import { KakaoUser } from '../domain/kakao-user.type';
+import { Public } from 'src/common/decorator/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +26,7 @@ export class AuthController {
   }
 
   @Get('kakao/login')
+  @Public()
   @Header('Content-Type', 'text/html')
   async kakaoRedirect(@Res() res: Response): Promise<void> {
     const kakaoAuthorizationUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${this.apiKey}&redirect_uri=${this.redirectUri}`;
@@ -32,6 +34,7 @@ export class AuthController {
   }
 
   @Get('kakao/callback')
+  @Public()
   async getKakaoInfo(@Query('code') code: string, @Res() res: Response) {
     const kakaoUser: KakaoUser = await this.authService.kakaoLogin(
       this.apiKey,
