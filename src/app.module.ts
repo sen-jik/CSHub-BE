@@ -17,8 +17,6 @@ import authConfig from './config/modules/auth.config';
 import swaggerConfig from './config/modules/swagger.config';
 
 const logger = new Logger('DatabaseConnection');
-logger.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-logger.log(`PORT: ${process.env.PORT}`);
 
 const PostgresModule = TypeOrmModule.forRootAsync({
   useClass: TypeOrmConfigService,
