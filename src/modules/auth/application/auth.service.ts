@@ -2,20 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from '../../user/application/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { KakaoUser } from '../domain/kakao-user.type';
-import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import {
   ACCESS_TOKEN_COOKIE_CONFIG,
   REFRESH_TOKEN_COOKIE_CONFIG,
 } from '../domain/cookie.constant';
 import { KakaoAuthClient } from '../infrastructure/external/kakao/kakao-auth.client';
+import { JwtPayload } from '../strategy/type/jwt-payload.type';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     private readonly kakaoAuthClient: KakaoAuthClient,
   ) {}
 
@@ -39,23 +38,27 @@ export class AuthService {
     return user;
   }
 
-  async generateTokens(payload: KakaoUser) {
+  async generateTokens(
+    payload: Pick<JwtPayload, 'id' | 'role' | 'profile_image' | 'nickname'>,
+  ) {
     const accessToken = this.generateAccessToken(payload);
-    const refreshToken = this.generateRefreshToken(payload);
+    const refreshToken = this.generateRefreshToken(payload.id);
     return { accessToken, refreshToken };
   }
 
-  private generateAccessToken(kakaoUser: KakaoUser) {
+  private generateAccessToken(
+    payload: Pick<JwtPayload, 'id' | 'role' | 'profile_image' | 'nickname'>,
+  ) {
     const accessToken = this.jwtService.sign({
-      ...kakaoUser,
+      ...payload,
       tokenType: 'access',
     });
     return accessToken;
   }
 
-  private generateRefreshToken(kakaoUser: KakaoUser) {
+  private generateRefreshToken(id: string) {
     const refreshToken = this.jwtService.sign({
-      ...kakaoUser,
+      id,
       tokenType: 'refresh',
     });
     return refreshToken;
