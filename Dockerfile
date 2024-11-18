@@ -25,6 +25,8 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY package.json ecosystem.config.js ./
 
+COPY .env.development ./.env.development
+
 EXPOSE 4000
 
 CMD ["pnpm", "run", "start:dev"]
