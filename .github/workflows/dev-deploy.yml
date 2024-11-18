@@ -63,5 +63,5 @@ jobs:
       - name: Docker 컨테이너 시작
         run: |
           sudo docker stop cshub-api || true
-          docker rm cshub-api || true
-          docker run -d --name cshub-api -p 4000:4000 ${{ secrets.DOCKER_USERNAME }}/cshub-api:dev
+          sudo docker rm cshub-api || true
+          sudo docker run -d --name cshub-api -p 4000:4000 ${{ secrets.DOCKER_USERNAME }}/cshub-api:dev
