@@ -1,0 +1,67 @@
+name: CSHUB DEV CD
+
+on:
+  push:
+    # TODO : test 후 dev로 변경
+    # TODO : deploy test 브랜치 파서 test 후 Deploy로
+    branches: [feature/deploy-test]
+
+jobs:
+  docker-build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 리포지토리 체크아웃
+        uses: actions/checkout@v3
+
+      - name: env 생성
+        run: |
+          echo "PORT=${{ secrets.PORT }}" >> .env.development
+          echo "DATABASE_TYPE=${{ secrets.DATABASE_TYPE }}" >> .env.development
+          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env.development
+          echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> .env.development
+          echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}" >> .env.development
+          echo "POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }}" >> .env.development
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env.development
+          echo "POSTGRES_SYNCHRONIZE=${{ secrets.POSTGRES_SYNCHRONIZE }}" >> .env.development
+          echo "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" >> .env.development
+          echo "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" >> .env.development
+          echo "KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }}" >> .env.development
+          echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env.development
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.development
+          echo "JWT_ACCESS_EXPIRES_IN=${{ secrets.JWT_ACCESS_EXPIRES_IN }}" >> .env.development
+          echo "JWT_REFRESH_EXPIRES_IN=${{ secrets.JWT_REFRESH_EXPIRES_IN }}" >> .env.development
+          echo "COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}" >> .env.development
+          echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> .env.development
+
+      - name: Docker Hub 로그인
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker 이미지 빌드
+        run: docker build -t cshub-api:dev .
+
+      - name: Docker 이미지 Tagging
+        run: docker tag cshub-api:dev ${{ secrets.DOCKER_USERNAME }}/cshub-api:dev
+
+      - name: Docker Hub에 이미지 푸시
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/cshub-api:dev
+
+  docker-pull-and-run:
+    runs-on: dev-api-runner
+    needs: [docker-build-and-push]
+    if: ${{ needs.docker-build-and-push.result == 'success' }}
+
+    steps:
+      - name: Docker Hub에서 Docker 이미지를 pull
+        run: |
+          sudo docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cshub-api:dev
+
+      - name: Docker 컨테이너 시작
+        run: |
+          sudo docker stop cshub-api || true
+          docker rm cshub-api || true
+          docker run -d --name cshub-api -p 4000:4000 ${{ secrets.DOCKER_USERNAME }}/cshub-api:dev
