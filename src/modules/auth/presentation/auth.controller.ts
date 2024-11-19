@@ -10,6 +10,9 @@ import { Response } from 'express';
 import { AuthService } from '../application/auth.service';
 import { ConfigService } from '@nestjs/config';
 import { KakaoUser } from '../domain/kakao-user.type';
+import { Public } from 'src/common/decorator/public.decorator';
+import { JwtPayload } from '../strategy/type/jwt-payload.type';
+import { USER_ERROR_MESSAGES } from 'src/common/constants/error-messages';
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +28,7 @@ export class AuthController {
   }
 
   @Get('kakao/login')
+  @Public()
   @Header('Content-Type', 'text/html')
   async kakaoRedirect(@Res() res: Response): Promise<void> {
     const kakaoAuthorizationUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${this.apiKey}&redirect_uri=${this.redirectUri}`;
@@ -32,6 +36,7 @@ export class AuthController {
   }
 
   @Get('kakao/callback')
+  @Public()
   async getKakaoInfo(@Query('code') code: string, @Res() res: Response) {
     const kakaoUser: KakaoUser = await this.authService.kakaoLogin(
       this.apiKey,
@@ -41,16 +46,25 @@ export class AuthController {
 
     const user = await this.authService.findOrCreateUser(kakaoUser);
     if (!user) {
-      throw new InternalServerErrorException('유저 생성 실패');
+      throw new InternalServerErrorException(
+        USER_ERROR_MESSAGES.USER_CREATE_FAILED,
+      );
     }
-    kakaoUser.id = user.id;
+
+    const payload: Pick<
+      JwtPayload,
+      'id' | 'role' | 'profile_image' | 'nickname'
+    > = {
+      id: user.id,
+      role: user.role,
+      profile_image: user.profile_image,
+      nickname: user.nickname,
+    };
 
     const { accessToken, refreshToken } =
-      await this.authService.generateTokens(kakaoUser);
+      await this.authService.generateTokens(payload);
 
     this.authService.setAuthCookies(res, accessToken, refreshToken);
-
-    // TODO : 프론트 주소로 변경
-    return res.redirect('http://localhost:4000');
+    return res.redirect(this.configService.get<string>('app.clientUrl'));
   }
 }

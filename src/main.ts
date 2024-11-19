@@ -26,15 +26,14 @@ async function bootstrap() {
       }),
     );
     const config = new DocumentBuilder()
-      .setTitle('NestJS project')
-      .setDescription('NestJS project API description')
+      .setTitle('CSHub API')
+      .setDescription('CSHub API description')
       .setVersion('1.0')
       .addBearerAuth()
       .build();
     const customOptions: SwaggerCustomOptions = {
       swaggerOptions: {
-        // TODO : 인증 구현 후 true로 변경
-        persistAuthorization: false,
+        persistAuthorization: true,
       },
     };
     const document = SwaggerModule.createDocument(app, config);
