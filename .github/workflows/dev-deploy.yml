@@ -2,9 +2,7 @@ name: CSHUB DEV CD
 
 on:
   push:
-    # TODO : test 후 dev로 변경
-    # TODO : deploy test 브랜치 파서 test 후 Deploy로
-    branches: [feature/deploy-test]
+    branches: [dev]
 
 jobs:
   docker-build-and-push:
