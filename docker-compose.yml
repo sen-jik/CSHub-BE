@@ -12,6 +12,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+    networks:
+      - cshub
 
   pgadmin:
     image: dpage/pgadmin4
@@ -23,6 +25,28 @@ services:
       - '5050:80'
     depends_on:
       - db
+    networks:
+      - cshub
+
+  api:
+    image: cshub-api:latest
+    build: .
+    container_name: cshub-api
+    ports:
+      - '4000:4000'
+    env_file:
+      - '.env.development'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - db
+    networks:
+      - cshub
+
+networks:
+  cshub:
+    external: true
 
 volumes:
   postgres_data:
