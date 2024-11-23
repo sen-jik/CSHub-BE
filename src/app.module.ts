@@ -11,7 +11,7 @@ import { QuizModule } from './modules/quiz/quiz.module';
 import { AuthModule } from './modules/auth/auth.module';
 import appConfig from './config/modules/app.config';
 import postgresConfig from './database/config/postgres.config';
-import { PointHistoryModule } from './modules/point-history/point-history.module';
+import { PointModule } from './modules/point/point.module';
 import { RankingModule } from './modules/ranking/ranking.module';
 import authConfig from './config/modules/auth.config';
 import swaggerConfig from './config/modules/swagger.config';
@@ -40,7 +40,7 @@ const PostgresModule = TypeOrmModule.forRootAsync({
     QuizModule,
     AuthModule,
     RankingModule,
-    PointHistoryModule,
+    PointModule,
   ],
   controllers: [AppController, UserController],
 })

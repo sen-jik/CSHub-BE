@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class PointHistoryService {
+export class PointService {
   findAll(): string {
-    return 'point-history';
+    return 'point';
   }
 }
