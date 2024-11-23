@@ -1,6 +1,4 @@
 import { Logger, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { UserController } from './modules/user/presentation/user.controller';
 import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
@@ -42,6 +40,5 @@ const PostgresModule = TypeOrmModule.forRootAsync({
     RankingModule,
     PointModule,
   ],
-  controllers: [AppController, UserController],
 })
 export class AppModule {}
