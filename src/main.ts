@@ -12,6 +12,13 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
+  app.enableCors({
+    origin: configService.get('app.clientUrl'),
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   const SWAGGER_ENVS = ['local', 'development'];
   const stage = configService.get('app.nodeEnv');
   if (SWAGGER_ENVS.includes(stage)) {
