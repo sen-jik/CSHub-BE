@@ -5,10 +5,21 @@ import { LikeController } from './presentation/like.controller';
 import { LikeService } from './application/like.service';
 import { CategoryController } from './presentation/category.controller';
 import { CategoryService } from './application/catgegory.service';
+import { InterviewController } from './presentation/interview.controller';
+import { InterviewService } from './application/interview.service';
+import { Interview } from './infrastructure/db/entity/interview.entity';
+import { SubCategory } from './infrastructure/db/entity/sub-category.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  controllers: [QuizController, LikeController, CategoryController],
-  providers: [QuizService, LikeService, CategoryService],
-  exports: [QuizService, LikeService, CategoryService],
+  imports: [TypeOrmModule.forFeature([Interview, SubCategory])],
+  controllers: [
+    QuizController,
+    LikeController,
+    CategoryController,
+    InterviewController,
+  ],
+  providers: [QuizService, LikeService, CategoryService, InterviewService],
+  exports: [QuizService, LikeService, CategoryService, InterviewService],
 })
 export class QuizModule {}
