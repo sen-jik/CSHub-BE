@@ -15,6 +15,8 @@ jobs:
       - name: env 생성
         run: |
           echo "PORT=${{ secrets.PORT }}" >> .env.development
+          echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> .env.development
+          echo "CORS_WHITELIST=${{ secrets.CORS_WHITELIST }}" >> .env.development
           echo "DATABASE_TYPE=${{ secrets.DATABASE_TYPE }}" >> .env.development
           echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env.development
           echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> .env.development
@@ -29,8 +31,6 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.development
           echo "JWT_ACCESS_EXPIRES_IN=${{ secrets.JWT_ACCESS_EXPIRES_IN }}" >> .env.development
           echo "JWT_REFRESH_EXPIRES_IN=${{ secrets.JWT_REFRESH_EXPIRES_IN }}" >> .env.development
-          echo "COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}" >> .env.development
-          echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> .env.development
 
       - name: Docker Hub 로그인
         uses: docker/login-action@v1

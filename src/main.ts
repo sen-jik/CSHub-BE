@@ -5,7 +5,8 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { SwaggerCustomOptions } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import * as expressBasicAuth from 'express-basic-auth';
-import * as cookieParser from 'cookie-parser';
+import { ValidationPipe } from '@nestjs/common';
+import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,7 +14,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.enableCors({
-    origin: configService.get('app.clientUrl'),
+    origin: configService.get('app.corsWhitelist').split(','),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -46,7 +47,14 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('docs', app, document, customOptions);
   }
-  app.use(cookieParser(configService.get('auth.cookie.secret')));
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
+  app.useGlobalInterceptors(new TransformInterceptor());
+
   await app.listen(configService.get('app.port'));
   console.log(`STAGE: ${configService.get('app.nodeEnv')}`);
   console.log(`PORT: ${configService.get('app.port')}`);

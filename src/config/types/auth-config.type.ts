@@ -8,7 +8,4 @@ export type AuthConfig = {
     accessExpiresIn: string;
     refreshExpiresIn: string;
   };
-  cookie: {
-    secret: string;
-  };
 };

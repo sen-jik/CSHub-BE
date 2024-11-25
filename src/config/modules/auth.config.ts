@@ -18,9 +18,6 @@ class EnvironmentVariablesValidator {
 
   @IsString()
   JWT_REFRESH_EXPIRES_IN: string;
-
-  @IsString()
-  COOKIE_SECRET: string;
 }
 
 export default registerAs<AuthConfig>('auth', () => {
@@ -35,9 +32,6 @@ export default registerAs<AuthConfig>('auth', () => {
       secret: process.env.JWT_SECRET,
       accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
       refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
-    },
-    cookie: {
-      secret: process.env.COOKIE_SECRET,
     },
   };
 });
