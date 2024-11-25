@@ -7,7 +7,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { QuizAttempt } from 'src/modules/quiz/infrastructure/db/entity/quiz-attempt.entity';
 
 @Entity()
 export class User {
@@ -44,8 +46,8 @@ export class User {
   @DeleteDateColumn()
   deleted_at: Date;
 
-  //   @OneToMany(() => QuizAttempt, (attempt) => attempt.user)
-  //   attempts: QuizAttempt[];
+  @OneToMany(() => QuizAttempt, (attempt) => attempt.user)
+  attempts: QuizAttempt[];
 
   //   @OneToMany(() => Like, (like) => like.user)
   //   likes: Like[];
