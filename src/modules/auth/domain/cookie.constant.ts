@@ -3,6 +3,7 @@ export const ACCESS_TOKEN_COOKIE_CONFIG = {
   secure: true,
   sameSite: 'lax',
   maxAge: 60 * 60 * 1000, // 1시간
+  domain: '.cshub.kr',
 } as const;
 
 export const REFRESH_TOKEN_COOKIE_CONFIG = {
@@ -10,4 +11,5 @@ export const REFRESH_TOKEN_COOKIE_CONFIG = {
   secure: true,
   sameSite: 'lax',
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+  domain: '.cshub.kr',
 } as const;
