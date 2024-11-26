@@ -2,16 +2,19 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  OneToMany,
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   JoinColumn,
 } from 'typeorm';
+import { ChoiceOption } from './choice-option.entity';
+import { QuizAttempt } from './quiz-attempt.entity';
 import { SubCategory } from './sub-category.entity';
 
 @Entity()
-export class Interview {
+export class ChoiceQuiz {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,13 +23,10 @@ export class Interview {
   subCategory: SubCategory;
 
   @Column()
-  question: string;
+  title: string;
 
   @Column()
-  answer: string;
-
-  @Column({ type: 'simple-array', nullable: true })
-  keywords: string[];
+  description: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -36,4 +36,10 @@ export class Interview {
 
   @DeleteDateColumn()
   deleted_at: Date;
+
+  @OneToMany(() => ChoiceOption, (option) => option.choice_quiz)
+  options: ChoiceOption[];
+
+  @OneToMany(() => QuizAttempt, (attempt) => attempt.choice_quiz)
+  attempts: QuizAttempt[];
 }

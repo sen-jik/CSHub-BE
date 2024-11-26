@@ -18,6 +18,9 @@ class EnvironmentVariablesValidator {
   PORT: number;
 
   @IsString()
+  CORS_WHITELIST: string;
+
+  @IsString()
   CLIENT_URL: string;
 }
 
@@ -27,5 +30,6 @@ export default registerAs<AppConfig>('app', () => {
     nodeEnv: process.env.NODE_ENV || 'development',
     port: parseInt(process.env.PORT) || 4000,
     clientUrl: process.env.CLIENT_URL,
+    corsWhitelist: process.env.CORS_WHITELIST,
   };
 });
