@@ -5,10 +5,20 @@ import { Roles } from 'src/common/decorator/role.decorator';
 import { Role } from 'src/modules/user/domain/role.enum';
 import { ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateInterviewResDto } from '../dto/interview.res.dto';
+import {
+  CreateInterviewResDto,
+  GetAllInterviewResDto,
+  GetInterviewByCategoryResDto,
+} from '../dto/interview.res.dto';
+import { ApiGetResponse } from 'src/common/decorator/swagger.decorator';
 
 @ApiTags('Interview')
-@ApiExtraModels(CreateInterviewReqDto, CreateInterviewResDto)
+@ApiExtraModels(
+  CreateInterviewReqDto,
+  CreateInterviewResDto,
+  GetInterviewByCategoryResDto,
+  GetAllInterviewResDto,
+)
 @Controller('interviews')
 export class InterviewController {
   constructor(private readonly interviewService: InterviewService) {}
@@ -27,7 +37,8 @@ export class InterviewController {
   }
 
   @Get()
-  async getAllInterview() {
-    return this.interviewService.getAllInterview();
+  @ApiGetResponse(GetAllInterviewResDto)
+  async getAllInterview(): Promise<GetAllInterviewResDto> {
+    return await this.interviewService.getAllInterview();
   }
 }
