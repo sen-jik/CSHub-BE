@@ -1,9 +1,9 @@
-import { Interview } from './interview';
+import { InterviewResDto } from '../dto/interview.res.dto';
 
 export type InterviewGroup = {
   mainCategoryName: string;
   subCategoryName: string;
-  interviews: Interview[];
+  interviews: InterviewResDto[];
 };
 
 export type InterviewGroups = Record<string, InterviewGroup>;

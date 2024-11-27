@@ -1,10 +1,21 @@
 import { Interview } from '../interview';
 import { InterviewGroup, InterviewGroups } from '../interview-group.type';
+import { InterviewResDto } from '../../dto/interview.res.dto';
 
 export class InterviewGroupMapper {
   static toGroups(interviews: Interview[]): InterviewGroup[] {
     const groupedInterviews = this.groupInterviewsByCategory(interviews);
     return Object.values(groupedInterviews);
+  }
+
+  private static toResponseDto(interview: Interview): InterviewResDto {
+    return {
+      id: interview.id,
+      question: interview.question,
+      answer: interview.answer,
+      keywords: interview.keywords,
+      createdAt: interview.createdAt,
+    };
   }
 
   private static groupInterviewsByCategory(
@@ -19,7 +30,7 @@ export class InterviewGroupMapper {
         acc[key] = this.createNewGroup(mainCategoryName, categoryName);
       }
 
-      acc[key].interviews.push(interview);
+      acc[key].interviews.push(this.toResponseDto(interview));
       return acc;
     }, {} as InterviewGroups);
   }
