@@ -5,11 +5,28 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { SwaggerCustomOptions } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import * as expressBasicAuth from 'express-basic-auth';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { utilities, WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
 // import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      transports: [
+        new winston.transports.Console({
+          level: process.env.STAGE === 'production' ? 'info' : 'debug',
+          format: winston.format.combine(
+            winston.format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss',
+            }),
+            winston.format.ms(),
+            utilities.format.nestLike('CSHub'),
+          ),
+        }),
+      ],
+    }),
+  });
   app.setGlobalPrefix('api/v1');
 
   const configService = app.get(ConfigService);
@@ -59,7 +76,7 @@ async function bootstrap() {
   // app.useGlobalInterceptors(new TransformInterceptor());
 
   await app.listen(configService.get('app.port'));
-  console.log(`STAGE: ${configService.get('app.nodeEnv')}`);
-  console.log(`PORT: ${configService.get('app.port')}`);
+  Logger.log(`STAGE: ${configService.get('app.nodeEnv')}`);
+  Logger.log(`PORT: ${configService.get('app.port')}`);
 }
 bootstrap();

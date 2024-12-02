@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
@@ -13,6 +13,7 @@ import { PointModule } from './modules/point/point.module';
 import { RankingModule } from './modules/ranking/ranking.module';
 import authConfig from './config/modules/auth.config';
 import swaggerConfig from './config/modules/swagger.config';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 const logger = new Logger('DatabaseConnection');
 
@@ -40,5 +41,10 @@ const PostgresModule = TypeOrmModule.forRootAsync({
     RankingModule,
     PointModule,
   ],
+  providers: [Logger],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
