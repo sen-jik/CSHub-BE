@@ -6,7 +6,7 @@ import { SwaggerCustomOptions } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import * as expressBasicAuth from 'express-basic-auth';
 import { ValidationPipe } from '@nestjs/common';
-import { TransformInterceptor } from './common/interceptor/transform.interceptor';
+// import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -54,7 +54,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.useGlobalInterceptors(new TransformInterceptor());
+
+  // TODO: 추후 페이징 처리 시점에 활성화
+  // app.useGlobalInterceptors(new TransformInterceptor());
 
   await app.listen(configService.get('app.port'));
   console.log(`STAGE: ${configService.get('app.nodeEnv')}`);
