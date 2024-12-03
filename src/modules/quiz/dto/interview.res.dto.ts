@@ -7,12 +7,26 @@ export class CreateInterviewResDto {
   id: number;
 }
 
-export class InterviewResDto {
+export class FindInterviewInfoResDto {
   @ApiProperty({
     description: '인터뷰 ID',
     example: 1,
   })
   id: number;
+
+  @ApiProperty({
+    description: '서브 카테고리 정보',
+    example: {
+      id: 1,
+      name: 'NETWORK',
+      main_category: 'COMMON',
+    },
+  })
+  subCategory: {
+    id: number;
+    name: string;
+    main_category: string;
+  };
 
   @ApiProperty({
     description: '질문',
@@ -38,7 +52,21 @@ export class InterviewResDto {
   })
   createdAt: Date;
 }
-export class GetInterviewByCategoryResDto {
+
+export class FindInterviewResDto {
+  @ApiProperty({
+    description: '인터뷰 ID',
+    example: 1,
+  })
+  id: number;
+
+  @ApiProperty({
+    description: '질문',
+    example: 'HTTP와 HTTPS의 차이점은 무엇인가요?',
+  })
+  question: string;
+}
+export class FindInterviewByCategoryResDto {
   @ApiProperty({
     description: '메인 카테고리명',
     example: 'COMMON',
@@ -53,15 +81,15 @@ export class GetInterviewByCategoryResDto {
 
   @ApiProperty({
     description: '인터뷰 목록',
-    type: [InterviewResDto],
+    type: [FindInterviewResDto],
   })
-  interviews: InterviewResDto[];
+  interviews: FindInterviewResDto[];
 }
 
-export class GetAllInterviewResDto {
+export class FindAllInterviewResDto {
   @ApiProperty({
     description: '카테고리별 인터뷰 목록',
-    type: [GetInterviewByCategoryResDto],
+    type: [FindInterviewByCategoryResDto],
   })
-  items: GetInterviewByCategoryResDto[];
+  items: FindInterviewByCategoryResDto[];
 }
