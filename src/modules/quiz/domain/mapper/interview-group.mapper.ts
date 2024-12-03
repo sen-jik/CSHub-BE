@@ -1,6 +1,6 @@
 import { Interview } from '../interview';
 import { InterviewGroup, InterviewGroups } from '../interview-group.type';
-import { InterviewResDto } from '../../dto/interview.res.dto';
+import { FindInterviewResDto } from '../../dto/interview.res.dto';
 
 export class InterviewGroupMapper {
   static toGroups(interviews: Interview[]): InterviewGroup[] {
@@ -8,13 +8,10 @@ export class InterviewGroupMapper {
     return Object.values(groupedInterviews);
   }
 
-  private static toResponseDto(interview: Interview): InterviewResDto {
+  private static toResponseDto(interview: Interview): FindInterviewResDto {
     return {
       id: interview.id,
       question: interview.question,
-      answer: interview.answer,
-      keywords: interview.keywords,
-      createdAt: interview.createdAt,
     };
   }
 
