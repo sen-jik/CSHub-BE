@@ -6,13 +6,15 @@ import {
   CreateInterviewResDto,
   FindInterviewInfoResDto,
   FindAllInterviewResDto,
+  FindInterviewInfoWithLikeResDto,
 } from '../dto/interview.res.dto';
-
+import { LikeService } from './like.service';
 @Injectable()
 export class InterviewService {
   constructor(
     @Inject('IInterviewRepository')
     private readonly interviewRepository: IInterviewRepository,
+    private readonly likeService: LikeService,
   ) {}
 
   async create(
@@ -30,8 +32,21 @@ export class InterviewService {
     return { items: interviewGroups };
   }
 
-  async findOne(id: number): Promise<FindInterviewInfoResDto> {
+  async findOne(
+    id: number,
+    userId?: number,
+  ): Promise<FindInterviewInfoResDto | FindInterviewInfoWithLikeResDto> {
     const interview = await this.interviewRepository.findById(id);
-    return interview;
+
+    if (!userId) {
+      return interview;
+    }
+
+    const like = await this.likeService.findOne(id, userId);
+
+    return {
+      ...interview,
+      isLiked: !!like,
+    };
   }
 }

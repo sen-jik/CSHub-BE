@@ -55,7 +55,7 @@ export class AuthController {
       JwtPayload,
       'id' | 'role' | 'profile_image' | 'nickname'
     > = {
-      id: user.id,
+      id: user.id.toString(),
       role: user.role,
       profile_image: user.profile_image,
       nickname: user.nickname,
