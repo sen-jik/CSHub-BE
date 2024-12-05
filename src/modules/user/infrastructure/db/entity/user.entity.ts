@@ -13,8 +13,8 @@ import { QuizAttempt } from 'src/modules/quiz/infrastructure/db/entity/quiz-atte
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ unique: true })
   platformId: string;

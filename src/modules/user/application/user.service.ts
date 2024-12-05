@@ -37,7 +37,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async checkUserIsAdmin(id: string) {
+  async checkUserIsAdmin(id: number) {
     const user = await this.userRepository.findOneBy({ id });
     return user.role === Role.ADMIN;
   }
