@@ -30,15 +30,20 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    if (this.isPublicRoute(context)) return true;
-
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.isPublicRoute(context);
     const { request, response } = this.getHttpContext(context);
     const { accessToken, refreshToken } = this.extractTokens(
       request.headers.cookie,
     );
+
+    // NOTE : public route인 경우도 토큰 검증 수행. ( 비로그인과 로그인 유저 모두 접근해야하는 라우트 용)
+    if (isPublic) {
+      if (accessToken || refreshToken) {
+        await this.validateTokens(context, accessToken, refreshToken, response);
+      }
+      return true;
+    }
 
     if (!accessToken && !refreshToken) {
       this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_REQUIRED);
@@ -75,6 +80,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     refreshToken: string,
     response: Response,
   ): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
     let decodedToken = await this.verifyAccessToken(accessToken);
 
     if (!decodedToken && refreshToken) {
@@ -88,7 +94,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return firstValueFrom(super.canActivate(context) as Observable<boolean>);
     }
 
-    return this.checkRolePermission(context, decodedToken.id);
+    request.user = {
+      id: parseInt(decodedToken.id),
+      role: decodedToken.role,
+      profile_image: decodedToken.profile_image,
+      nickname: decodedToken.nickname,
+    };
+
+    return this.checkRolePermission(context, parseInt(decodedToken.id));
   }
 
   private async verifyAccessToken(accessToken: string) {
@@ -135,7 +148,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   private async checkRolePermission(
     context: ExecutionContext,
-    userId: string,
+    userId: number,
   ): Promise<boolean> {
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
       context.getHandler(),

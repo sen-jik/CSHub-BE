@@ -16,18 +16,16 @@ import { JwtAuthGuard } from './jwt-auth.guard';
     UserModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return {
-          global: true,
-          secret: configService.get('auth.jwt.secret'),
-          signOptions: {
-            expiresIn: configService.get('auth.jwt.accessExpiresIn'),
-          },
-          refreshToken: {
-            expiresIn: configService.get('auth.jwt.refreshExpiresIn'),
-          },
-        };
-      },
+      useFactory: (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get('auth.jwt.secret'),
+        signOptions: {
+          expiresIn: configService.get('auth.jwt.accessExpiresIn'),
+        },
+        refreshToken: {
+          expiresIn: configService.get('auth.jwt.refreshExpiresIn'),
+        },
+      }),
     }),
   ],
   controllers: [AuthController],
@@ -35,12 +33,13 @@ import { JwtAuthGuard } from './jwt-auth.guard';
     AuthService,
     JwtStrategy,
     KakaoAuthClient,
+    JwtAuthGuard,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
     Logger,
   ],
-  exports: [AuthService],
+  exports: [AuthService, JwtAuthGuard, JwtModule],
 })
 export class AuthModule {}
