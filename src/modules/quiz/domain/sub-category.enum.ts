@@ -12,13 +12,13 @@ export enum SubCategoryEnum {
   DB = 'DB',
   NODE = 'NODE',
   SPRING = 'SPRING',
+  CLOUD = 'CLOUD',
   BE_ETC = 'BE_ETC',
 
   // COMMON
   NETWORK = 'NETWORK',
   DATA_STRUCTURE = 'DATA_STRUCTURE',
   ALGORITHM = 'ALGORITHM',
-  WEB = 'WEB',
   FIT = 'FIT',
   COMMON_ETC = 'COMMON_ETC',
 

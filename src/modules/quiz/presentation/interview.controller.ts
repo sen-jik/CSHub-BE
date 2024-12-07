@@ -9,17 +9,19 @@ import {
   CreateInterviewResDto,
   FindInterviewInfoResDto,
   FindAllInterviewResDto,
-  FindInterviewByCategoryResDto,
+  FindInterviewInfoWithLikeResDto,
 } from '../dto/interview.res.dto';
 import { ApiGetResponse } from 'src/common/decorator/swagger.decorator';
+import { User, UserAfterAuth } from 'src/common/decorator/user.decorator';
+import { Public } from 'src/common/decorator/public.decorator';
 
 @ApiTags('Interview')
 @ApiExtraModels(
   CreateInterviewReqDto,
   CreateInterviewResDto,
-  FindInterviewByCategoryResDto,
   FindAllInterviewResDto,
   FindInterviewInfoResDto,
+  FindInterviewInfoWithLikeResDto,
 )
 @Controller('interviews')
 export class InterviewController {
@@ -34,15 +36,20 @@ export class InterviewController {
     return await this.interviewService.create(createInterviewReqDto);
   }
 
+  @Public()
   @Get()
   @ApiGetResponse(FindAllInterviewResDto)
   async findAll(): Promise<FindAllInterviewResDto> {
     return await this.interviewService.findAll();
   }
 
+  @Public()
   @Get(':id')
-  @ApiGetResponse(FindInterviewInfoResDto)
-  async findOne(@Param('id') id: number): Promise<FindInterviewInfoResDto> {
-    return await this.interviewService.findOne(id);
+  @ApiGetResponse(FindInterviewInfoWithLikeResDto)
+  async findOne(
+    @Param('id') id: number,
+    @User() user?: UserAfterAuth,
+  ): Promise<FindInterviewInfoResDto | FindInterviewInfoWithLikeResDto> {
+    return await this.interviewService.findOne(id, user?.id);
   }
 }

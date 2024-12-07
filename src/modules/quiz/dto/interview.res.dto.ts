@@ -53,6 +53,14 @@ export class FindInterviewInfoResDto {
   createdAt: Date;
 }
 
+export class FindInterviewInfoWithLikeResDto extends FindInterviewInfoResDto {
+  @ApiProperty({
+    description: '좋아요 여부',
+    example: true,
+  })
+  isLiked: boolean;
+}
+
 export class FindInterviewResDto {
   @ApiProperty({
     description: '인터뷰 ID',

@@ -7,8 +7,10 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { SubCategory } from './sub-category.entity';
+import { Like } from './like.entity';
 
 @Entity()
 export class Interview {
@@ -36,4 +38,7 @@ export class Interview {
 
   @DeleteDateColumn()
   deleted_at: Date;
+
+  @OneToMany(() => Like, (like) => like.quiz)
+  likes: Like[];
 }

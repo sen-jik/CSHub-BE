@@ -31,6 +31,7 @@ export class CategorySeedService {
           { name: SubCategoryEnum.DB, main_category: MainCategoryEnum.BE },
           { name: SubCategoryEnum.NODE, main_category: MainCategoryEnum.BE },
           { name: SubCategoryEnum.SPRING, main_category: MainCategoryEnum.BE },
+          { name: SubCategoryEnum.CLOUD, main_category: MainCategoryEnum.BE },
           { name: SubCategoryEnum.BE_ETC, main_category: MainCategoryEnum.BE },
         ]);
 
@@ -48,7 +49,6 @@ export class CategorySeedService {
             name: SubCategoryEnum.ALGORITHM,
             main_category: MainCategoryEnum.COMMON,
           },
-          { name: SubCategoryEnum.WEB, main_category: MainCategoryEnum.COMMON },
           { name: SubCategoryEnum.FIT, main_category: MainCategoryEnum.COMMON },
           {
             name: SubCategoryEnum.COMMON_ETC,
