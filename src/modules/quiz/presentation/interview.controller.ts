@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { InterviewService } from '../application/interview.service';
 import { CreateInterviewReqDto } from '../dto/interview.req.dto';
 import { Roles } from 'src/common/decorator/role.decorator';
@@ -7,8 +7,9 @@ import { ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CreateInterviewResDto,
-  GetAllInterviewResDto,
-  GetInterviewByCategoryResDto,
+  FindInterviewInfoResDto,
+  FindAllInterviewResDto,
+  FindInterviewByCategoryResDto,
 } from '../dto/interview.res.dto';
 import { ApiGetResponse } from 'src/common/decorator/swagger.decorator';
 
@@ -16,8 +17,9 @@ import { ApiGetResponse } from 'src/common/decorator/swagger.decorator';
 @ApiExtraModels(
   CreateInterviewReqDto,
   CreateInterviewResDto,
-  GetInterviewByCategoryResDto,
-  GetAllInterviewResDto,
+  FindInterviewByCategoryResDto,
+  FindAllInterviewResDto,
+  FindInterviewInfoResDto,
 )
 @Controller('interviews')
 export class InterviewController {
@@ -26,19 +28,21 @@ export class InterviewController {
   @ApiBearerAuth()
   @Roles(Role.ADMIN)
   @Post()
-  async createInterview(
+  async create(
     @Body() createInterviewReqDto: CreateInterviewReqDto,
   ): Promise<CreateInterviewResDto> {
-    const { id } = await this.interviewService.createInterview(
-      createInterviewReqDto,
-    );
-
-    return { id };
+    return await this.interviewService.create(createInterviewReqDto);
   }
 
   @Get()
-  @ApiGetResponse(GetAllInterviewResDto)
-  async getAllInterview(): Promise<GetAllInterviewResDto> {
-    return await this.interviewService.getAllInterview();
+  @ApiGetResponse(FindAllInterviewResDto)
+  async findAll(): Promise<FindAllInterviewResDto> {
+    return await this.interviewService.findAll();
+  }
+
+  @Get(':id')
+  @ApiGetResponse(FindInterviewInfoResDto)
+  async findOne(@Param('id') id: number): Promise<FindInterviewInfoResDto> {
+    return await this.interviewService.findOne(id);
   }
 }

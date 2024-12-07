@@ -4,6 +4,6 @@ import { Interview } from '../interview';
 export interface IInterviewRepository {
   create(data: CreateInterviewReqDto): Promise<Interview>;
   findAll(): Promise<Interview[]>;
-  findOne(id: number): Promise<Interview>;
+  findById(id: number): Promise<Interview>;
   findBySubCategory(subCategoryId: number): Promise<Interview[]>;
 }

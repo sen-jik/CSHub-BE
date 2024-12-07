@@ -42,7 +42,7 @@ export class InterviewRepository implements IInterviewRepository {
     return InterviewMapper.toDomainList(entities);
   }
 
-  async findOne(id: number): Promise<InterviewDomain> {
+  async findById(id: number): Promise<InterviewDomain> {
     const entity = await this.repository.findOne({
       where: { id },
       relations: {
