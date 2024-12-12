@@ -1,7 +1,9 @@
-import { IsArray, IsEnum, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 import { IsNotEmpty } from 'class-validator';
-import { SubCategoryEnum } from '../domain/sub-category.enum';
+import { SubCategoryEnum } from '../../domain/sub-category.enum';
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
+import { PaginationReqDto } from 'src/common/dto/pagination.dto';
 
 export class CreateInterviewReqDto {
   @ApiProperty({
@@ -40,4 +42,27 @@ export class CreateInterviewReqDto {
   @IsEnum(SubCategoryEnum)
   @IsNotEmpty()
   subCategory: SubCategoryEnum;
+}
+
+export class SearchInterviewReqDto extends PaginationReqDto {
+  @ApiProperty({
+    required: false,
+    description: '검색어',
+    example: '검색어',
+  })
+  @IsString()
+  @IsOptional()
+  search?: string;
+
+  @ApiProperty({
+    required: false,
+    description: '카테고리',
+    example: 'NETWORK',
+    name: 'sub_category',
+  })
+  @Expose({ name: 'sub_category' })
+  @IsString()
+  @IsEnum(SubCategoryEnum)
+  @IsOptional()
+  subCategory?: SubCategoryEnum;
 }

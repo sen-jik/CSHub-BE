@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { PaginationResDto } from 'src/common/dto/pagination.dto';
+
 export class CreateInterviewResDto {
   @ApiProperty({
     description: '인터뷰 ID',
@@ -7,7 +9,7 @@ export class CreateInterviewResDto {
   id: number;
 }
 
-export class FindInterviewInfoResDto {
+export class FindInterviewInfoDto {
   @ApiProperty({
     description: '인터뷰 ID',
     example: 1,
@@ -53,7 +55,7 @@ export class FindInterviewInfoResDto {
   createdAt: Date;
 }
 
-export class FindInterviewInfoWithLikeResDto extends FindInterviewInfoResDto {
+export class FindInterviewInfoWithLikeDto extends FindInterviewInfoDto {
   @ApiProperty({
     description: '좋아요 여부',
     example: true,
@@ -74,6 +76,15 @@ export class FindInterviewResDto {
   })
   question: string;
 }
+
+export class FindInterviewWithLikeResDto extends FindInterviewResDto {
+  @ApiProperty({
+    description: '좋아요 여부',
+    example: true,
+  })
+  isLiked: boolean;
+}
+
 export class FindInterviewByCategoryResDto {
   @ApiProperty({
     description: '메인 카테고리명',
@@ -100,4 +111,20 @@ export class FindAllInterviewResDto {
     type: [FindInterviewByCategoryResDto],
   })
   items: FindInterviewByCategoryResDto[];
+}
+
+export class SearchInterviewResDto extends PaginationResDto {
+  @ApiProperty({
+    description: '인터뷰 목록',
+    type: [FindInterviewInfoDto],
+  })
+  interviews: FindInterviewInfoDto[];
+}
+
+export class SearchInterviewWithLikeResDto extends PaginationResDto {
+  @ApiProperty({
+    description: '인터뷰 목록',
+    type: [FindInterviewInfoWithLikeDto],
+  })
+  interviews: FindInterviewInfoWithLikeDto[];
 }
