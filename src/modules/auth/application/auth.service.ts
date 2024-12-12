@@ -9,6 +9,7 @@ import {
 } from '../domain/cookie.constant';
 import { KakaoAuthClient } from '../infrastructure/external/kakao/kakao-auth.client';
 import { JwtPayload } from '../strategy/type/jwt-payload.type';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly kakaoAuthClient: KakaoAuthClient,
+    private readonly configService: ConfigService,
   ) {}
 
   async kakaoLogin(apiKey: string, redirectUri: string, code: string) {
@@ -57,10 +59,15 @@ export class AuthService {
   }
 
   private generateRefreshToken(id: string) {
-    const refreshToken = this.jwtService.sign({
-      id,
-      tokenType: 'refresh',
-    });
+    const refreshToken = this.jwtService.sign(
+      {
+        id,
+        tokenType: 'refresh',
+      },
+      {
+        expiresIn: this.configService.get('auth.jwt.refreshExpiresIn'),
+      },
+    );
     return refreshToken;
   }
 
