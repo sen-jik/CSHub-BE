@@ -39,6 +39,6 @@ export class Interview {
   @DeleteDateColumn()
   deleted_at: Date;
 
-  @OneToMany(() => Like, (like) => like.quiz)
+  @OneToMany(() => Like, (like) => like.interview)
   likes: Like[];
 }
