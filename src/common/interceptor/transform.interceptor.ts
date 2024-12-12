@@ -18,7 +18,7 @@ export class TransformInterceptor<T, R> implements NestInterceptor<T, R> {
           return {
             items: data,
             page: Number(request.query['page'] || 1),
-            size: Number(request.query['size'] || 10),
+            limit: Number(request.query['limit'] || 10),
           };
         }
         return data;
