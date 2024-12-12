@@ -10,11 +10,10 @@ import { LikeService } from '../application/like.service';
 import { User, UserAfterAuth } from 'src/common/decorator/user.decorator';
 import { ApiTags, ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
-import { ToggleLikeResDto } from '../dto/like.res.dto';
 import { LikeTargetType, ToggleLikeReqDto } from '../dto/like.req.dto';
 
 @ApiTags('Like')
-@ApiExtraModels(ToggleLikeResDto, ToggleLikeReqDto)
+@ApiExtraModels(ToggleLikeReqDto)
 @Controller('likes')
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
