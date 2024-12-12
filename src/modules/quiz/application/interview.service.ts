@@ -1,14 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateInterviewReqDto } from '../dto/interview.req.dto';
+import {
+  CreateInterviewReqDto,
+  SearchInterviewReqDto,
+} from './dto/interview.req.dto';
 import { IInterviewRepository } from '../domain/repository/iinterview.repository';
 import { InterviewGroupMapper } from '../domain/mapper/interview-group.mapper';
+
+import { LikeService } from './like.service';
 import {
   CreateInterviewResDto,
-  FindInterviewInfoResDto,
   FindAllInterviewResDto,
-  FindInterviewInfoWithLikeResDto,
-} from '../dto/interview.res.dto';
-import { LikeService } from './like.service';
+  FindInterviewResDto,
+  FindInterviewWithLikeResDto,
+  SearchInterviewResDto,
+  SearchInterviewWithLikeResDto,
+} from './dto/interview.res.dto';
 @Injectable()
 export class InterviewService {
   constructor(
@@ -35,7 +41,7 @@ export class InterviewService {
   async findOne(
     id: number,
     userId?: number,
-  ): Promise<FindInterviewInfoResDto | FindInterviewInfoWithLikeResDto> {
+  ): Promise<FindInterviewResDto | FindInterviewWithLikeResDto> {
     const interview = await this.interviewRepository.findById(id);
 
     if (!userId) {
@@ -47,6 +53,40 @@ export class InterviewService {
     return {
       ...interview,
       isLiked: !!like,
+    };
+  }
+
+  async search(
+    userId: number,
+    searchInterviewReqDto: SearchInterviewReqDto,
+  ): Promise<SearchInterviewResDto | SearchInterviewWithLikeResDto> {
+    const { interviews, total } = userId
+      ? await this.interviewRepository.searchWithLike(
+          userId,
+          searchInterviewReqDto,
+        )
+      : await this.interviewRepository.search(searchInterviewReqDto);
+
+    const { page = 1, limit = 10 } = searchInterviewReqDto;
+
+    if (userId) {
+      return {
+        interviews: interviews.map((interview) => ({
+          ...interview,
+          isLiked:
+            interview.likes?.some((like) => like.userId === userId) ?? false,
+        })),
+        page,
+        limit,
+        total,
+      };
+    }
+
+    return {
+      interviews,
+      page,
+      limit,
+      total,
     };
   }
 }
