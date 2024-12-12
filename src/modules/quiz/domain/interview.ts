@@ -44,4 +44,10 @@ export class Interview {
     description: '생성일시',
   })
   createdAt: Date;
+
+  @ApiProperty({
+    description: '좋아요 목록',
+    required: false,
+  })
+  likes?: { userId: number }[];
 }
