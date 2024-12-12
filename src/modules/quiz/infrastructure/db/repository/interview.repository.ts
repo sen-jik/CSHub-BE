@@ -3,10 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Interview as InterviewEntity } from '../entity/interview.entity';
 import { Interview as InterviewDomain } from '../../../domain/interview';
-import { CreateInterviewReqDto } from '../../../dto/interview.req.dto';
-import { SubCategory } from '../entity/sub-category.entity';
+import {
+  CreateInterviewReqDto,
+  SearchInterviewReqDto,
+} from '../../../application/dto/interview.req.dto';
 import { IInterviewRepository } from 'src/modules/quiz/domain/repository/iinterview.repository';
 import { InterviewMapper } from '../../../domain/mapper/interview.mapper';
+import { SubCategory } from '../../../domain/sub-category';
 
 @Injectable()
 export class InterviewRepository implements IInterviewRepository {
@@ -62,5 +65,77 @@ export class InterviewRepository implements IInterviewRepository {
       },
     });
     return InterviewMapper.toDomainList(entities);
+  }
+
+  async search(
+    data: SearchInterviewReqDto,
+  ): Promise<{ interviews: any[]; total: number }> {
+    const { subCategory, search, page = 1, limit = 10 } = data;
+    const queryBuilder = this.repository
+      .createQueryBuilder('interview')
+      .leftJoinAndSelect('interview.subCategory', 'subCategory');
+
+    if (subCategory) {
+      queryBuilder.andWhere('subCategory.name = :subCategory', {
+        subCategory: subCategory,
+      });
+    }
+
+    if (search) {
+      queryBuilder.andWhere(
+        '(interview.question ILIKE :search OR interview.answer ILIKE :search)',
+        { search: `%${search}%` },
+      );
+    }
+
+    const [entities, total] = await queryBuilder
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      interviews: InterviewMapper.toDomainList(entities),
+      total,
+    };
+  }
+
+  async searchWithLike(
+    userId: number,
+    data: SearchInterviewReqDto,
+  ): Promise<{ interviews: any[]; total: number }> {
+    const { subCategory, search, page = 1, limit = 10 } = data;
+    const queryBuilder = this.repository
+      .createQueryBuilder('interview')
+      .leftJoinAndSelect('interview.subCategory', 'subCategory')
+      .leftJoinAndSelect(
+        'interview.likes',
+        'likes',
+        'likes.user_id = :userId',
+        { userId },
+      )
+      .leftJoinAndSelect('likes.user', 'user');
+
+    if (subCategory) {
+      queryBuilder.andWhere('subCategory.name = :subCategory', {
+        subCategory: subCategory,
+      });
+    }
+
+    if (search) {
+      queryBuilder.andWhere(
+        '(interview.question ILIKE :search OR interview.answer ILIKE :search)',
+        { search: `%${search}%` },
+      );
+    }
+
+    const [entities, total] = await queryBuilder
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      interviews: InterviewMapper.toDomainList(entities),
+      total,
+    };
   }
 }
