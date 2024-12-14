@@ -36,7 +36,7 @@ export class CreateInterviewReqDto {
   @ApiProperty({
     required: true,
     description: '서브 카테고리',
-    example: 'NETWORK',
+    example: 'network',
   })
   @IsString()
   @IsEnum(SubCategoryEnum)

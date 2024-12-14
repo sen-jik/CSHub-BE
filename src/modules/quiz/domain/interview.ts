@@ -11,8 +11,8 @@ export class Interview {
     description: '서브 카테고리 정보',
     example: {
       id: 1,
-      name: 'NETWORK',
-      main_category: 'COMMON',
+      name: 'network',
+      main_category: 'common',
     },
   })
   subCategory: {

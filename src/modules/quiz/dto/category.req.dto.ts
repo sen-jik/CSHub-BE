@@ -7,7 +7,7 @@ export class CreateSubCategoryReqDto {
   @ApiProperty({
     required: true,
     description: '서브 카테고리',
-    example: 'NETWORK',
+    example: 'network',
   })
   @IsEnum(SubCategoryEnum)
   @IsNotEmpty()
@@ -16,7 +16,7 @@ export class CreateSubCategoryReqDto {
   @ApiProperty({
     required: true,
     description: '메인 카테고리',
-    example: 'COMMON',
+    example: 'common',
   })
   @IsEnum(MainCategoryEnum)
   @IsNotEmpty()

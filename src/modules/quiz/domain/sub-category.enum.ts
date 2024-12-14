@@ -1,29 +1,29 @@
 export enum SubCategoryEnum {
   // FE
-  BROWSER = 'BROWSER',
-  REACT = 'REACT',
-  NEXT = 'NEXT',
-  HTML = 'HTML',
-  CSS = 'CSS',
-  FE_ETC = 'FE_ETC',
+  BROWSER = 'browser',
+  REACT = 'react',
+  NEXT = 'next',
+  HTML = 'html',
+  CSS = 'css',
+  FE_ETC = 'fe_etc',
 
   // BE
-  OS = 'OS',
-  DB = 'DB',
-  NODE = 'NODE',
-  SPRING = 'SPRING',
-  CLOUD = 'CLOUD',
-  BE_ETC = 'BE_ETC',
+  OS = 'os',
+  DB = 'db',
+  NODE = 'node',
+  SPRING = 'spring',
+  CLOUD = 'cloud',
+  BE_ETC = 'be_etc',
 
   // COMMON
-  NETWORK = 'NETWORK',
-  DATA_STRUCTURE = 'DATA_STRUCTURE',
-  ALGORITHM = 'ALGORITHM',
-  FIT = 'FIT',
-  COMMON_ETC = 'COMMON_ETC',
+  NETWORK = 'network',
+  DATA_STRUCTURE = 'data_structure',
+  ALGORITHM = 'algorithm',
+  FIT = 'fit',
+  COMMON_ETC = 'common_etc',
 
   // LANGUAGE
-  JAVASCRIPT = 'JAVASCRIPT',
-  TYPESCRIPT = 'TYPESCRIPT',
-  JAVA = 'JAVA',
+  JAVASCRIPT = 'javascript',
+  TYPESCRIPT = 'typescript',
+  JAVA = 'java',
 }

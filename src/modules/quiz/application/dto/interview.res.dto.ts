@@ -20,8 +20,8 @@ export class FindInterviewInfoDto {
     description: '서브 카테고리 정보',
     example: {
       id: 1,
-      name: 'NETWORK',
-      main_category: 'COMMON',
+      name: 'network',
+      main_category: 'common',
     },
   })
   subCategory: {
@@ -88,13 +88,13 @@ export class FindInterviewWithLikeResDto extends FindInterviewResDto {
 export class FindInterviewByCategoryResDto {
   @ApiProperty({
     description: '메인 카테고리명',
-    example: 'COMMON',
+    example: 'common',
   })
   mainCategoryName: string;
 
   @ApiProperty({
     description: '서브 카테고리명',
-    example: 'NETWORK',
+    example: 'network',
   })
   subCategoryName: string;
 
