@@ -18,6 +18,7 @@ import { USER_ERROR_MESSAGES } from 'src/common/constants/error-messages';
 export class AuthController {
   private readonly apiKey: string;
   private readonly redirectUri: string;
+  private readonly onboardingUrl: string;
 
   constructor(
     private readonly authService: AuthService,
@@ -25,6 +26,8 @@ export class AuthController {
   ) {
     this.apiKey = this.configService.get<string>('auth.kakao.apiKey');
     this.redirectUri = this.configService.get<string>('auth.kakao.redirectUri');
+    this.onboardingUrl =
+      this.configService.get<string>('app.clientUrl') + '/onboarding';
   }
 
   @Get('kakao/login')
@@ -65,6 +68,11 @@ export class AuthController {
       await this.authService.generateTokens(payload);
 
     this.authService.setAuthCookies(res, accessToken, refreshToken);
-    return res.redirect(this.configService.get<string>('app.clientUrl'));
+
+    const redirectUrl = user.isNew
+      ? this.onboardingUrl
+      : this.configService.get<string>('app.clientUrl');
+
+    return res.redirect(redirectUrl);
   }
 }

@@ -33,11 +33,14 @@ export class AuthService {
   }
 
   async findOrCreateUser(kakaoUser: KakaoUser) {
-    let user = await this.userService.findUserByKakaoId(kakaoUser.kakaoId);
-    if (!user) {
-      user = await this.userService.createUser({ ...kakaoUser });
+    const existUser = await this.userService.findUserByKakaoId(
+      kakaoUser.kakaoId,
+    );
+    if (existUser) {
+      return { ...existUser, isNew: false };
     }
-    return user;
+    const newUser = await this.userService.createUser(kakaoUser);
+    return { ...newUser, isNew: true };
   }
 
   async generateTokens(
