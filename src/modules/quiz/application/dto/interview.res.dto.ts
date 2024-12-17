@@ -53,9 +53,7 @@ export class FindInterviewInfoDto {
     description: '생성일시',
   })
   createdAt: Date;
-}
 
-export class FindInterviewInfoWithLikeDto extends FindInterviewInfoDto {
   @ApiProperty({
     description: '좋아요 여부',
     example: true,
@@ -119,12 +117,4 @@ export class SearchInterviewResDto extends PaginationResDto {
     type: [FindInterviewInfoDto],
   })
   interviews: FindInterviewInfoDto[];
-}
-
-export class SearchInterviewWithLikeResDto extends PaginationResDto {
-  @ApiProperty({
-    description: '인터뷰 목록',
-    type: [FindInterviewInfoWithLikeDto],
-  })
-  interviews: FindInterviewInfoWithLikeDto[];
 }

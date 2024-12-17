@@ -94,7 +94,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         }
       } catch (error) {
         console.log(error);
-        console.log('here2');
         this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_EXPIRED);
       }
     }
@@ -157,7 +156,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return this.jwtService.verify(newAccessToken);
     } catch (error) {
       console.log(error);
-      console.log('here8');
       this.logger.error(AUTH_ERROR_MESSAGES.INVALID_TOKEN, error.message);
       this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_EXPIRED);
     }

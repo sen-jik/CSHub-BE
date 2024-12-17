@@ -13,7 +13,6 @@ import {
   FindInterviewResDto,
   FindInterviewWithLikeResDto,
   SearchInterviewResDto,
-  SearchInterviewWithLikeResDto,
 } from './dto/interview.res.dto';
 @Injectable()
 export class InterviewService {
@@ -59,7 +58,7 @@ export class InterviewService {
   async search(
     userId: number,
     searchInterviewReqDto: SearchInterviewReqDto,
-  ): Promise<SearchInterviewResDto | SearchInterviewWithLikeResDto> {
+  ): Promise<SearchInterviewResDto> {
     const { interviews, total } = userId
       ? await this.interviewRepository.searchWithLike(
           userId,
@@ -70,22 +69,15 @@ export class InterviewService {
     const { page = 1, limit = 10 } = searchInterviewReqDto;
     const totalPage = Math.ceil(total / limit);
 
-    if (userId) {
-      return {
-        interviews: interviews.map((interview) => ({
-          ...interview,
-          isLiked:
-            interview.likes?.some((like) => like.userId === userId) ?? false,
-        })),
-        page,
-        limit,
-        total,
-        totalPage,
-      };
-    }
+    const interviewsWithLike = interviews.map((interview) => ({
+      ...interview,
+      isLiked: userId
+        ? (interview.likes?.some((like) => like.userId === userId) ?? false)
+        : false,
+    }));
 
     return {
-      interviews,
+      interviews: interviewsWithLike,
       page,
       limit,
       total,
