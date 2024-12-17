@@ -42,4 +42,9 @@ export class PaginationResDto {
     example: 100,
   })
   total: number;
+  @ApiProperty({
+    description: '전체 ��이지',
+    example: 10,
+  })
+  totalPage: number;
 }

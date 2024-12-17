@@ -68,6 +68,7 @@ export class InterviewService {
       : await this.interviewRepository.search(searchInterviewReqDto);
 
     const { page = 1, limit = 10 } = searchInterviewReqDto;
+    const totalPage = Math.ceil(total / limit);
 
     if (userId) {
       return {
@@ -79,6 +80,7 @@ export class InterviewService {
         page,
         limit,
         total,
+        totalPage,
       };
     }
 
@@ -87,6 +89,7 @@ export class InterviewService {
       page,
       limit,
       total,
+      totalPage,
     };
   }
 }
