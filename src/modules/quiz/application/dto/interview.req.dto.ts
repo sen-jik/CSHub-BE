@@ -57,7 +57,7 @@ export class SearchInterviewReqDto extends PaginationReqDto {
   @ApiProperty({
     required: false,
     description: '카테고리',
-    example: 'NETWORK',
+    example: 'network',
     name: 'sub_category',
   })
   @Expose({ name: 'sub_category' })
