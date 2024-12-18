@@ -10,6 +10,7 @@ import {
 import { IInterviewRepository } from 'src/modules/quiz/domain/repository/iinterview.repository';
 import { InterviewMapper } from '../../../domain/mapper/interview.mapper';
 import { SubCategory } from '../../../domain/sub-category';
+import { FindInterviewInfoDto } from 'src/modules/quiz/application/dto/interview.res.dto';
 
 @Injectable()
 export class InterviewRepository implements IInterviewRepository {
@@ -69,7 +70,7 @@ export class InterviewRepository implements IInterviewRepository {
 
   async search(
     data: SearchInterviewReqDto,
-  ): Promise<{ interviews: any[]; total: number }> {
+  ): Promise<{ interviews: FindInterviewInfoDto[]; total: number }> {
     const { subCategory, search, page = 1, limit = 10 } = data;
     const queryBuilder = this.repository
       .createQueryBuilder('interview')
@@ -102,7 +103,7 @@ export class InterviewRepository implements IInterviewRepository {
   async searchWithLike(
     userId: number,
     data: SearchInterviewReqDto,
-  ): Promise<{ interviews: any[]; total: number }> {
+  ): Promise<{ interviews: FindInterviewInfoDto[]; total: number }> {
     const { subCategory, search, page = 1, limit = 10 } = data;
     const queryBuilder = this.repository
       .createQueryBuilder('interview')
