@@ -1,6 +1,6 @@
 export enum MainCategoryEnum {
-  FE = 'FE',
-  BE = 'BE',
-  COMMON = 'COMMON',
-  LANGUAGE = 'LANGUAGE',
+  FE = 'fe',
+  BE = 'be',
+  COMMON = 'common',
+  LANGUAGE = 'language',
 }

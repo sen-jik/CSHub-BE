@@ -22,9 +22,6 @@ import { JwtAuthGuard } from './jwt-auth.guard';
         signOptions: {
           expiresIn: configService.get('auth.jwt.accessExpiresIn'),
         },
-        refreshToken: {
-          expiresIn: configService.get('auth.jwt.refreshExpiresIn'),
-        },
       }),
     }),
   ],

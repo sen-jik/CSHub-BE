@@ -10,7 +10,6 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from '../user/application/user.service';
-import { Observable, firstValueFrom } from 'rxjs';
 import { Role } from '../user/domain/role.enum';
 import { Request, Response } from 'express';
 import { IS_PUBLIC_KEY } from 'src/common/decorator/public.decorator';
@@ -84,14 +83,23 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     let decodedToken = await this.verifyAccessToken(accessToken);
 
     if (!decodedToken && refreshToken) {
-      decodedToken = await this.verifyRefreshTokenAndSignAccessToken(
-        refreshToken,
-        response,
-      );
+      try {
+        decodedToken = await this.verifyRefreshTokenAndSignAccessToken(
+          refreshToken,
+          response,
+        );
+
+        if (!decodedToken) {
+          this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_EXPIRED);
+        }
+      } catch (error) {
+        console.log(error);
+        this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_EXPIRED);
+      }
     }
 
     if (!decodedToken) {
-      return firstValueFrom(super.canActivate(context) as Observable<boolean>);
+      this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_REQUIRED);
     }
 
     request.user = {
@@ -114,8 +122,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       }
       return decoded;
     } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return null; // refresh token으로 재발급 시도하기 위해
+      }
       this.logger.error(AUTH_ERROR_MESSAGES.INVALID_TOKEN, error.message);
-      return null;
+      this.throwUnauthorized(AUTH_ERROR_MESSAGES.INVALID_TOKEN);
     }
   }
 
@@ -131,6 +142,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
       const newAccessToken = this.jwtService.sign({
         id: refreshDecoded.id,
+        role: refreshDecoded.role,
+        profile_image: refreshDecoded.profile_image,
+        nickname: refreshDecoded.nickname,
         tokenType: 'access',
       });
 
@@ -141,6 +155,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       );
       return this.jwtService.verify(newAccessToken);
     } catch (error) {
+      console.log(error);
       this.logger.error(AUTH_ERROR_MESSAGES.INVALID_TOKEN, error.message);
       this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_EXPIRED);
     }

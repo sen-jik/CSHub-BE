@@ -1,27 +1,35 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { InterviewService } from '../application/interview.service';
-import { CreateInterviewReqDto } from '../dto/interview.req.dto';
+import {
+  CreateInterviewReqDto,
+  SearchInterviewReqDto,
+} from '../application/dto/interview.req.dto';
 import { Roles } from 'src/common/decorator/role.decorator';
 import { Role } from 'src/modules/user/domain/role.enum';
 import { ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
 import { ApiTags } from '@nestjs/swagger';
-import {
-  CreateInterviewResDto,
-  FindInterviewInfoResDto,
-  FindAllInterviewResDto,
-  FindInterviewInfoWithLikeResDto,
-} from '../dto/interview.res.dto';
 import { ApiGetResponse } from 'src/common/decorator/swagger.decorator';
 import { User, UserAfterAuth } from 'src/common/decorator/user.decorator';
 import { Public } from 'src/common/decorator/public.decorator';
-
+import {
+  InterviewIdDto,
+  FindAllInterviewResDto,
+  FindInterviewByCategoryResDto,
+  FindInterviewResDto,
+  FindInterviewWithLikeResDto,
+  SearchInterviewResDto,
+} from '../application/dto/interview.res.dto';
+import { PaginationResDto } from 'src/common/dto/pagination.dto';
 @ApiTags('Interview')
 @ApiExtraModels(
   CreateInterviewReqDto,
-  CreateInterviewResDto,
+  InterviewIdDto,
   FindAllInterviewResDto,
-  FindInterviewInfoResDto,
-  FindInterviewInfoWithLikeResDto,
+  SearchInterviewResDto,
+  FindInterviewResDto,
+  FindInterviewWithLikeResDto,
+  FindInterviewByCategoryResDto,
+  PaginationResDto,
 )
 @Controller('interviews')
 export class InterviewController {
@@ -32,24 +40,36 @@ export class InterviewController {
   @Post()
   async create(
     @Body() createInterviewReqDto: CreateInterviewReqDto,
-  ): Promise<CreateInterviewResDto> {
+  ): Promise<InterviewIdDto> {
     return await this.interviewService.create(createInterviewReqDto);
   }
 
   @Public()
+  @Get('/search')
+  @ApiGetResponse(SearchInterviewResDto)
+  async search(
+    @Query() searchInterviewReqDto: SearchInterviewReqDto,
+    @User() user?: UserAfterAuth,
+  ): Promise<SearchInterviewResDto> {
+    return await this.interviewService.search(user?.id, searchInterviewReqDto);
+  }
+
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
   @Get()
   @ApiGetResponse(FindAllInterviewResDto)
   async findAll(): Promise<FindAllInterviewResDto> {
     return await this.interviewService.findAll();
   }
 
-  @Public()
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
   @Get(':id')
-  @ApiGetResponse(FindInterviewInfoWithLikeResDto)
+  @ApiGetResponse(FindInterviewResDto)
   async findOne(
     @Param('id') id: number,
     @User() user?: UserAfterAuth,
-  ): Promise<FindInterviewInfoResDto | FindInterviewInfoWithLikeResDto> {
+  ): Promise<FindInterviewResDto | FindInterviewWithLikeResDto> {
     return await this.interviewService.findOne(id, user?.id);
   }
 }

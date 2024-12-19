@@ -15,6 +15,9 @@ export class InterviewMapper {
       main_category: entity.subCategory.main_category,
     };
     domain.createdAt = entity.created_at;
+    domain.likes = entity.likes?.map((like) => ({
+      userId: like.user.id,
+    }));
 
     return domain;
   }

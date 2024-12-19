@@ -1,14 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateInterviewReqDto } from '../dto/interview.req.dto';
+import {
+  CreateInterviewReqDto,
+  SearchInterviewReqDto,
+} from './dto/interview.req.dto';
 import { IInterviewRepository } from '../domain/repository/iinterview.repository';
 import { InterviewGroupMapper } from '../domain/mapper/interview-group.mapper';
-import {
-  CreateInterviewResDto,
-  FindInterviewInfoResDto,
-  FindAllInterviewResDto,
-  FindInterviewInfoWithLikeResDto,
-} from '../dto/interview.res.dto';
+
 import { LikeService } from './like.service';
+import {
+  InterviewIdDto,
+  FindAllInterviewResDto,
+  FindInterviewResDto,
+  FindInterviewWithLikeResDto,
+  SearchInterviewResDto,
+} from './dto/interview.res.dto';
 @Injectable()
 export class InterviewService {
   constructor(
@@ -19,7 +24,7 @@ export class InterviewService {
 
   async create(
     createInterviewReqDto: CreateInterviewReqDto,
-  ): Promise<CreateInterviewResDto> {
+  ): Promise<InterviewIdDto> {
     const interview = await this.interviewRepository.create(
       createInterviewReqDto,
     );
@@ -35,7 +40,7 @@ export class InterviewService {
   async findOne(
     id: number,
     userId?: number,
-  ): Promise<FindInterviewInfoResDto | FindInterviewInfoWithLikeResDto> {
+  ): Promise<FindInterviewResDto | FindInterviewWithLikeResDto> {
     const interview = await this.interviewRepository.findById(id);
 
     if (!userId) {
@@ -47,6 +52,36 @@ export class InterviewService {
     return {
       ...interview,
       isLiked: !!like,
+    };
+  }
+
+  async search(
+    userId: number,
+    searchInterviewReqDto: SearchInterviewReqDto,
+  ): Promise<SearchInterviewResDto> {
+    const { interviews, total } = userId
+      ? await this.interviewRepository.searchWithLike(
+          userId,
+          searchInterviewReqDto,
+        )
+      : await this.interviewRepository.search(searchInterviewReqDto);
+
+    const { page = 1, limit = 10 } = searchInterviewReqDto;
+    const totalPage = Math.ceil(total / limit);
+
+    const interviewsWithLike = interviews.map((interview) => ({
+      ...interview,
+      isLiked: userId
+        ? (interview.likes?.some((like) => like.userId === userId) ?? false)
+        : false,
+    }));
+
+    return {
+      interviews: interviewsWithLike,
+      page,
+      limit,
+      total,
+      totalPage,
     };
   }
 }
