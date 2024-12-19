@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Provider } from '../domain/provider.enum';
 import { KakaoUser } from '../../auth/domain/kakao-user.type';
 import { Role } from '../domain/role.enum';
+import { DefaultNicknamePolicy } from 'src/modules/quiz/domain/default-nickname-policy';
 @Injectable()
 export class UserService {
   constructor(
@@ -29,8 +30,7 @@ export class UserService {
   async createUser(kakaoUser: KakaoUser) {
     const user = new User();
 
-    // TODO : 랜던 닉네임으로 변경
-    user.nickname = kakaoUser.nickname;
+    user.nickname = DefaultNicknamePolicy.generateRandomString();
     user.profile_image = kakaoUser.profile_image;
     user.platformId = kakaoUser.kakaoId;
     user.provider = Provider.KAKAO;
