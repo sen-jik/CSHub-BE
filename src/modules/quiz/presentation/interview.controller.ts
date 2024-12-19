@@ -12,7 +12,7 @@ import { ApiGetResponse } from 'src/common/decorator/swagger.decorator';
 import { User, UserAfterAuth } from 'src/common/decorator/user.decorator';
 import { Public } from 'src/common/decorator/public.decorator';
 import {
-  CreateInterviewResDto,
+  InterviewIdDto,
   FindAllInterviewResDto,
   FindInterviewByCategoryResDto,
   FindInterviewResDto,
@@ -23,7 +23,7 @@ import { PaginationResDto } from 'src/common/dto/pagination.dto';
 @ApiTags('Interview')
 @ApiExtraModels(
   CreateInterviewReqDto,
-  CreateInterviewResDto,
+  InterviewIdDto,
   FindAllInterviewResDto,
   SearchInterviewResDto,
   FindInterviewResDto,
@@ -40,7 +40,7 @@ export class InterviewController {
   @Post()
   async create(
     @Body() createInterviewReqDto: CreateInterviewReqDto,
-  ): Promise<CreateInterviewResDto> {
+  ): Promise<InterviewIdDto> {
     return await this.interviewService.create(createInterviewReqDto);
   }
 

@@ -8,7 +8,7 @@ import { InterviewGroupMapper } from '../domain/mapper/interview-group.mapper';
 
 import { LikeService } from './like.service';
 import {
-  CreateInterviewResDto,
+  InterviewIdDto,
   FindAllInterviewResDto,
   FindInterviewResDto,
   FindInterviewWithLikeResDto,
@@ -24,7 +24,7 @@ export class InterviewService {
 
   async create(
     createInterviewReqDto: CreateInterviewReqDto,
-  ): Promise<CreateInterviewResDto> {
+  ): Promise<InterviewIdDto> {
     const interview = await this.interviewRepository.create(
       createInterviewReqDto,
     );

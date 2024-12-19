@@ -1,34 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { PaginationResDto } from 'src/common/dto/pagination.dto';
 
-export class CreateInterviewResDto {
+export class BaseInterviewDto {
   @ApiProperty({
     description: '인터뷰 ID',
     example: 1,
   })
   id: number;
-}
-
-export class FindInterviewInfoDto {
-  @ApiProperty({
-    description: '인터뷰 ID',
-    example: 1,
-  })
-  id: number;
-
-  @ApiProperty({
-    description: '서브 카테고리 정보',
-    example: {
-      id: 1,
-      name: 'network',
-      main_category: 'common',
-    },
-  })
-  subCategory: {
-    id: number;
-    name: string;
-    main_category: string;
-  };
 
   @ApiProperty({
     description: '질문',
@@ -44,16 +22,55 @@ export class FindInterviewInfoDto {
   answer: string;
 
   @ApiProperty({
+    description: '생성일시',
+  })
+  createdAt: Date;
+}
+
+export class SubCategoryDto {
+  @ApiProperty({
+    description: '서브 카테고리 ID',
+    example: 1,
+  })
+  id: number;
+
+  @ApiProperty({
+    description: '서브 카테고리명',
+    example: 'network',
+  })
+  name: string;
+
+  @ApiProperty({
+    description: '메인 카테고리명',
+    example: 'common',
+  })
+  main_category: string;
+}
+
+export class InterviewIdDto extends PickType(BaseInterviewDto, [
+  'id',
+] as const) {}
+
+export class FindInterviewResDto extends PickType(BaseInterviewDto, [
+  'id',
+  'question',
+] as const) {}
+
+export class FindInterviewInfoDto extends BaseInterviewDto {
+  @ApiProperty({
+    description: '서브 카테고리 정보',
+    type: SubCategoryDto,
+  })
+  subCategory: SubCategoryDto;
+
+  @ApiProperty({
     description: '키워드 목록',
     example: ['HTTP', 'HTTPS', 'SSL', 'TLS', '보안'],
   })
   keywords: string[];
+}
 
-  @ApiProperty({
-    description: '생성일시',
-  })
-  createdAt: Date;
-
+export class FindIntervieInfoWithLikeDto extends FindInterviewInfoDto {
   @ApiProperty({
     description: '좋아요 여부',
     example: true,
@@ -61,21 +78,7 @@ export class FindInterviewInfoDto {
   isLiked: boolean;
 }
 
-export class FindInterviewResDto {
-  @ApiProperty({
-    description: '인터뷰 ID',
-    example: 1,
-  })
-  id: number;
-
-  @ApiProperty({
-    description: '질문',
-    example: 'HTTP와 HTTPS의 차이점은 무엇인가요?',
-  })
-  question: string;
-}
-
-export class FindInterviewWithLikeResDto extends FindInterviewResDto {
+export class FindInterviewWithLikeResDto extends BaseInterviewDto {
   @ApiProperty({
     description: '좋아요 여부',
     example: true,
