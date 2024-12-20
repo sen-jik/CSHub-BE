@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SubCategory } from 'src/modules/quiz/infrastructure/db/entity/sub-category.entity';
+import { SubCategory } from 'src/modules/category/infrastructure/db/entity/sub-category.entity';
 import { CategorySeedService } from './category-seed.service';
 
 @Module({
