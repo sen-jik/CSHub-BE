@@ -1,4 +1,4 @@
-import { FindInterviewResDto } from '../application/dto/interview.res.dto';
+import { FindInterviewResDto } from '../dto/interview.res.dto';
 export type InterviewGroup = {
   mainCategoryName: string;
   subCategoryName: string;

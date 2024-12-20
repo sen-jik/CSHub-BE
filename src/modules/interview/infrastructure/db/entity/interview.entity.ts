@@ -1,3 +1,5 @@
+import { SubCategory } from 'src/modules/category/infrastructure/db/entity/sub-category.entity';
+import { Like } from 'src/modules/like/infrastructure/db/entity/like.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,8 +11,6 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { SubCategory } from './sub-category.entity';
-import { Like } from './like.entity';
 
 @Entity()
 export class Interview {

@@ -2,18 +2,18 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   CreateInterviewReqDto,
   SearchInterviewReqDto,
-} from './dto/interview.req.dto';
+} from '../dto/interview.req.dto';
 import { IInterviewRepository } from '../domain/repository/iinterview.repository';
-import { InterviewGroupMapper } from '../domain/mapper/interview-group.mapper';
+import { InterviewGroupMapper } from '../../quiz/domain/mapper/interview-group.mapper';
 
-import { LikeService } from './like.service';
 import {
   InterviewIdDto,
   FindAllInterviewResDto,
   FindInterviewResDto,
   FindInterviewWithLikeResDto,
   SearchInterviewResDto,
-} from './dto/interview.res.dto';
+} from '../dto/interview.res.dto';
+import { LikeService } from 'src/modules/like/application/like.service';
 @Injectable()
 export class InterviewService {
   constructor(

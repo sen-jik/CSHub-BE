@@ -1,7 +1,7 @@
 import {
   CreateInterviewReqDto,
   SearchInterviewReqDto,
-} from '../../application/dto/interview.req.dto';
+} from '../../dto/interview.req.dto';
 import { Interview } from '../interview';
 
 export interface IInterviewRepository {
