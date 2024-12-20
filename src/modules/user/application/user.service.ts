@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Provider } from '../domain/provider.enum';
 import { KakaoUser } from '../../auth/domain/kakao-user.type';
 import { Role } from '../domain/role.enum';
-import { DefaultNicknamePolicy } from 'src/modules/quiz/domain/default-nickname-policy';
+import { DefaultNicknamePolicy } from 'src/modules/user/domain/default-nickname-policy';
 @Injectable()
 export class UserService {
   constructor(
