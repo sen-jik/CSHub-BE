@@ -30,13 +30,12 @@ import { JwtAuthGuard } from './jwt-auth.guard';
     AuthService,
     JwtStrategy,
     KakaoAuthClient,
-    JwtAuthGuard,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
     Logger,
   ],
-  exports: [AuthService, JwtAuthGuard, JwtModule],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

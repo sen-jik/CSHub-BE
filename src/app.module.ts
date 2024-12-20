@@ -14,6 +14,9 @@ import { RankingModule } from './modules/ranking/ranking.module';
 import authConfig from './config/modules/auth.config';
 import swaggerConfig from './config/modules/swagger.config';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { InterviewModule } from './modules/interview/interview.module';
+import { LikeModule } from './modules/like/like.module';
+import { CategoryModule } from './modules/category/category.module';
 
 const logger = new Logger('DatabaseConnection');
 
@@ -36,10 +39,13 @@ const PostgresModule = TypeOrmModule.forRootAsync({
     }),
     PostgresModule,
     UserModule,
+    InterviewModule,
     QuizModule,
     AuthModule,
     RankingModule,
     PointModule,
+    LikeModule,
+    CategoryModule,
   ],
   providers: [Logger],
 })
