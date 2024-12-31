@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { SubCategoryEnum } from '../domain/sub-category.enum';
+import { SubCategoryEnum } from '../../category/domain/sub-category.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { MainCategoryEnum } from '../domain/main-category.enum';
+import { MainCategoryEnum } from '../../category/domain/main-category.enum';
 
 export class CreateSubCategoryReqDto {
   @ApiProperty({

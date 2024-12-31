@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MainCategoryEnum } from 'src/modules/quiz/domain/main-category.enum';
-import { SubCategoryEnum } from 'src/modules/quiz/domain/sub-category.enum';
-import { SubCategory } from 'src/modules/quiz/infrastructure/db/entity/sub-category.entity';
+import { MainCategoryEnum } from 'src/modules/category/domain/main-category.enum';
+import { SubCategoryEnum } from 'src/modules/category/domain/sub-category.enum';
+import { SubCategory } from 'src/modules/category/infrastructure/db/entity/sub-category.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

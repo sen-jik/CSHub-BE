@@ -1,9 +1,6 @@
-import { FindInterviewResDto } from 'src/modules/interview/dto/interview.res.dto';
-import { Interview } from '../../../interview/domain/interview';
-import {
-  InterviewGroup,
-  InterviewGroups,
-} from '../../../interview/domain/interview-group.type';
+import { FindInterviewResDto } from '../../dto/interview.res.dto';
+import { Interview } from '../interview';
+import { InterviewGroup, InterviewGroups } from '../interview-group.type';
 
 export class InterviewGroupMapper {
   static toGroups(interviews: Interview[]): InterviewGroup[] {

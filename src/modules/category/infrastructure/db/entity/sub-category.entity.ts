@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { SubCategoryEnum } from 'src/modules/quiz/domain/sub-category.enum';
-import { MainCategoryEnum } from 'src/modules/quiz/domain/main-category.enum';
+import { SubCategoryEnum } from 'src/modules/category/domain/sub-category.enum';
+import { MainCategoryEnum } from 'src/modules/category/domain/main-category.enum';
 
 @Entity()
 export class SubCategory {

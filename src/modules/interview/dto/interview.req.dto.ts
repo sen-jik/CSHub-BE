@@ -1,9 +1,9 @@
 import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 import { IsNotEmpty } from 'class-validator';
-import { SubCategoryEnum } from '../../domain/sub-category.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { PaginationReqDto } from 'src/common/dto/pagination.dto';
+import { SubCategoryEnum } from 'src/modules/category/domain/sub-category.enum';
 
 export class CreateInterviewReqDto {
   @ApiProperty({

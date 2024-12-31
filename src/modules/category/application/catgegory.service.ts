@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { SubCategory } from '../infrastructure/db/entity/sub-category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SubCategoryEnum } from '../domain/sub-category.enum';
 import { CreateSubCategoryReqDto } from '../dto/category.req.dto';
+import { SubCategory } from '../infrastructure/db/entity/sub-category.entity';
 
 @Injectable()
 export class CategoryService {

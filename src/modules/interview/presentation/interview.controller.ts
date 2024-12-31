@@ -1,9 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { InterviewService } from '../application/interview.service';
-import {
-  CreateInterviewReqDto,
-  SearchInterviewReqDto,
-} from '../application/dto/interview.req.dto';
 import { Roles } from 'src/common/decorator/role.decorator';
 import { Role } from 'src/modules/user/domain/role.enum';
 import { ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
@@ -11,15 +7,19 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiGetResponse } from 'src/common/decorator/swagger.decorator';
 import { User, UserAfterAuth } from 'src/common/decorator/user.decorator';
 import { Public } from 'src/common/decorator/public.decorator';
+import { PaginationResDto } from 'src/common/dto/pagination.dto';
 import {
-  InterviewIdDto,
+  CreateInterviewReqDto,
+  SearchInterviewReqDto,
+} from '../dto/interview.req.dto';
+import {
   FindAllInterviewResDto,
   FindInterviewByCategoryResDto,
   FindInterviewResDto,
   FindInterviewWithLikeResDto,
+  InterviewIdDto,
   SearchInterviewResDto,
-} from '../application/dto/interview.res.dto';
-import { PaginationResDto } from 'src/common/dto/pagination.dto';
+} from '../dto/interview.res.dto';
 @ApiTags('Interview')
 @ApiExtraModels(
   CreateInterviewReqDto,

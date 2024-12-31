@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { ChoiceOption } from './choice-option.entity';
 import { QuizAttempt } from './quiz-attempt.entity';
-import { SubCategory } from './sub-category.entity';
+import { SubCategory } from '../../../../category/infrastructure/db/entity/sub-category.entity';
 
 @Entity()
 export class ChoiceQuiz {

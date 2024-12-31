@@ -3,14 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Interview as InterviewEntity } from '../entity/interview.entity';
 import { Interview as InterviewDomain } from '../../../domain/interview';
+import { IInterviewRepository } from 'src/modules/interview/domain/repository/iinterview.repository';
+import { InterviewMapper } from '../../../domain/mapper/interview.mapper';
+import { SubCategory } from '../../../../category/domain/sub-category';
 import {
   CreateInterviewReqDto,
   SearchInterviewReqDto,
-} from '../../../application/dto/interview.req.dto';
-import { IInterviewRepository } from 'src/modules/quiz/domain/repository/iinterview.repository';
-import { InterviewMapper } from '../../../domain/mapper/interview.mapper';
-import { SubCategory } from '../../../domain/sub-category';
-import { FindInterviewInfoDto } from 'src/modules/quiz/application/dto/interview.res.dto';
+} from 'src/modules/interview/dto/interview.req.dto';
+import { FindInterviewInfoDto } from 'src/modules/interview/dto/interview.res.dto';
 
 @Injectable()
 export class InterviewRepository implements IInterviewRepository {

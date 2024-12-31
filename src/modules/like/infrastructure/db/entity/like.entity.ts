@@ -6,8 +6,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from 'src/modules/user/infrastructure/db/entity/user.entity';
-import { Interview } from './interview.entity';
-import { ChoiceQuiz } from './choice-quiz.entity';
+import { ChoiceQuiz } from '../../../../quiz/infrastructure/db/entity/choice-quiz.entity';
+import { Interview } from 'src/modules/interview/infrastructure/db/entity/interview.entity';
 
 @Entity()
 export class Like {
