@@ -39,7 +39,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     // NOTE : public route인 경우도 토큰 검증 수행. ( 비로그인과 로그인 유저 모두 접근해야하는 라우트 용)
     if (isPublic) {
       if (accessToken || refreshToken) {
-        await this.validateTokens(context, accessToken, refreshToken, response);
+        await this.validateTokensOnPublic(
+          context,
+          accessToken,
+          refreshToken,
+          response,
+        );
       }
       return true;
     }
@@ -73,6 +78,15 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     };
   }
 
+  private setUserContext(request, decodedToken) {
+    request.user = {
+      id: parseInt(decodedToken.id),
+      role: decodedToken.role,
+      profile_image: decodedToken.profile_image,
+      nickname: decodedToken.nickname,
+    };
+  }
+
   private async validateTokens(
     context: ExecutionContext,
     accessToken: string,
@@ -93,7 +107,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_EXPIRED);
         }
       } catch (error) {
-        console.log(error);
+        this.logger.log(error);
         this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_EXPIRED);
       }
     }
@@ -102,12 +116,34 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_REQUIRED);
     }
 
-    request.user = {
-      id: parseInt(decodedToken.id),
-      role: decodedToken.role,
-      profile_image: decodedToken.profile_image,
-      nickname: decodedToken.nickname,
-    };
+    this.setUserContext(request, decodedToken);
+
+    return this.checkRolePermission(context, parseInt(decodedToken.id));
+  }
+
+  private async validateTokensOnPublic(
+    context: ExecutionContext,
+    accessToken: string,
+    refreshToken: string,
+    response: Response,
+  ): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    let decodedToken = await this.verifyAccessToken(accessToken);
+
+    if (!decodedToken && refreshToken) {
+      try {
+        decodedToken = await this.verifyRefreshTokenAndSignAccessTokenOnPublic(
+          refreshToken,
+          response,
+        );
+      } catch (error) {
+        this.logger.log(error);
+        this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_EXPIRED);
+      }
+    }
+    if (decodedToken) {
+      this.setUserContext(request, decodedToken);
+    }
 
     return this.checkRolePermission(context, parseInt(decodedToken.id));
   }
@@ -130,6 +166,18 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
   }
 
+  private issueAccessTokenWithCookie(refreshDecoded, response: Response) {
+    const newAccessToken = this.jwtService.sign({
+      id: refreshDecoded.id,
+      role: refreshDecoded.role,
+      profile_image: refreshDecoded.profile_image,
+      nickname: refreshDecoded.nickname,
+      tokenType: 'access',
+    });
+    response.cookie('access_token', newAccessToken, ACCESS_TOKEN_COOKIE_CONFIG);
+    return newAccessToken;
+  }
+
   private async verifyRefreshTokenAndSignAccessToken(
     refreshToken: string,
     response: Response,
@@ -140,24 +188,35 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         this.throwUnauthorized(AUTH_ERROR_MESSAGES.INVALID_TOKEN);
       }
 
-      const newAccessToken = this.jwtService.sign({
-        id: refreshDecoded.id,
-        role: refreshDecoded.role,
-        profile_image: refreshDecoded.profile_image,
-        nickname: refreshDecoded.nickname,
-        tokenType: 'access',
-      });
-
-      response.cookie(
-        'access_token',
-        newAccessToken,
-        ACCESS_TOKEN_COOKIE_CONFIG,
+      const newAccessToken = this.issueAccessTokenWithCookie(
+        refreshDecoded,
+        response,
       );
+
       return this.jwtService.verify(newAccessToken);
     } catch (error) {
-      console.log(error);
       this.logger.error(AUTH_ERROR_MESSAGES.INVALID_TOKEN, error.message);
       this.throwUnauthorized(AUTH_ERROR_MESSAGES.TOKEN_EXPIRED);
+    }
+  }
+
+  private async verifyRefreshTokenAndSignAccessTokenOnPublic(
+    refreshToken: string,
+    response: Response,
+  ) {
+    try {
+      const refreshDecoded = this.jwtService.verify(refreshToken);
+      if (refreshDecoded.tokenType === 'refresh') {
+        const newAccessToken = this.issueAccessTokenWithCookie(
+          refreshDecoded,
+          response,
+        );
+        return this.jwtService.verify(newAccessToken);
+      }
+    } catch (error) {
+      error.message = 'public route unauthorized user';
+      this.logger.log(error.message);
+      return true;
     }
   }
 
