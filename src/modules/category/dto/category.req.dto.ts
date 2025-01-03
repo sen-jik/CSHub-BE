@@ -2,6 +2,7 @@ import { IsEnum, IsNotEmpty } from 'class-validator';
 import { SubCategoryEnum } from '../../category/domain/sub-category.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { MainCategoryEnum } from '../../category/domain/main-category.enum';
+import { Transform } from 'class-transformer';
 
 export class CreateSubCategoryReqDto {
   @ApiProperty({
@@ -21,4 +22,15 @@ export class CreateSubCategoryReqDto {
   @IsEnum(MainCategoryEnum)
   @IsNotEmpty()
   mainCategory: MainCategoryEnum;
+}
+
+export class FindSubCategoryByMainReqDto {
+  @ApiProperty({
+    enum: MainCategoryEnum,
+    description: '메인 카테고리',
+    example: MainCategoryEnum.COMMON,
+  })
+  @IsEnum(MainCategoryEnum)
+  @Transform(({ value }) => value.toLowerCase())
+  main_category: MainCategoryEnum;
 }
