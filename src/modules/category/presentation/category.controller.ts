@@ -37,7 +37,9 @@ export class CategoryController {
   @ApiGetResponse(FindSubCategoryWithCountResDto)
   async findSubCategoryWithCount(
     @Param() { main_category }: FindSubCategoryByMainReqDto,
-  ) {
-    return this.categoryService.findSubCategoryWithCount(main_category);
+  ): Promise<FindSubCategoryWithCountResDto> {
+    const result =
+      await this.categoryService.findSubCategoryWithCount(main_category);
+    return { data: result };
   }
 }
